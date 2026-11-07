@@ -1233,13 +1233,14 @@ window.__ModuleLoader__.load({
 
   .dsh-spotlight-search-box {
     order: 1;
-    flex: 1;
-    min-width: calc(100% - 46px);
+    flex: 1 1 auto;
+    min-width: 0;
     padding: 8px 12px;
   }
 
   .dsh-spotlight-close-btn {
     order: 2;
+    flex: 0 0 36px;
     width: 36px;
     height: 36px;
     padding: 0;
@@ -1248,6 +1249,7 @@ window.__ModuleLoader__.load({
 
   .dsh-spotlight-filters {
     order: 3;
+    flex: 0 0 100%;
     width: 100%;
     display: flex;
     gap: 8px;
@@ -1279,8 +1281,7 @@ window.__ModuleLoader__.load({
   }
 
   .dsh-spotlight-item-location {
-    max-width: 90px;
-    font-size: 11px;
+    display: none;
   }
 
   .dsh-spotlight-row-open-btn {
