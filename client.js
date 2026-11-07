@@ -109,6 +109,19 @@ window.__ModuleLoader__.load({
       const abortCtrlRef = React.useRef(null);
       const lastClickRef = React.useRef({ time: 0, id: null });
 
+      // Keep shell.overlay above mobile sidebar drawer (z-index: 71)
+      React.useEffect(() => {
+        if (!isOpen) return;
+        const overlayEl = document.querySelector('[data-shell-overlay], [class*="overlayLayer"]');
+        if (overlayEl) {
+          const prevZ = overlayEl.style.zIndex;
+          overlayEl.style.zIndex = '1000';
+          return () => {
+            overlayEl.style.zIndex = prevZ;
+          };
+        }
+      }, [isOpen]);
+
       // Sessions snapshot from client session store
       const [sessionList, setSessionList] = React.useState(() => {
         return ctx.sessions?.list?.getSnapshot() || { byId: {}, ids: [] };
@@ -138,8 +151,23 @@ window.__ModuleLoader__.load({
 
       // Open/close listeners
       React.useEffect(() => {
+        const collapseMobileSidebar = () => {
+          if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+            const frame = document.querySelector('[class*="_frame"], [data-dsh-frame]');
+            if (frame && !frame.hasAttribute('data-sidebar-collapsed')) {
+              const toggle = document.querySelector('button[data-sidebar-toggle]');
+              if (toggle) toggle.click();
+              else {
+                const lay = ctx.get('layout') || ctx.layout;
+                if (lay && typeof lay.toggleSidebar === 'function') lay.toggleSidebar();
+              }
+            }
+          }
+        };
+
         const handleOpen = (e) => {
           setIsOpen(true);
+          collapseMobileSidebar();
           if (e && e.detail && typeof e.detail.query === 'string') {
             setQuery(e.detail.query);
           }
@@ -712,6 +740,10 @@ window.__ModuleLoader__.load({
 
     // Stylesheet definition using high-contrast IntelliJ/macOS dark theme colors
     const STYLES = `
+:is([data-shell-overlay], [class*="overlayLayer"]):has(.dsh-spotlight-overlay) {
+  z-index: 1000 !important;
+}
+
 .dsh-spotlight-overlay {
   position: fixed;
   inset: 0;

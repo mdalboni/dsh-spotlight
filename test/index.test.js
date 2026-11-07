@@ -49,4 +49,5 @@ test('dsh-spotlight client module adapts for mobile viewports and touch interact
   assert.match(clientCode, /toggleSidebar/);
   assert.match(clientCode, /data-sidebar-collapsed/);
   assert.match(clientCode, /16px\s*!important/);
+  assert.match(clientCode, /overlayLayer.*z-index:\s*1000/s);
 });
