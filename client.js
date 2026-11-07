@@ -594,9 +594,16 @@ window.__ModuleLoader__.load({
           h('button', {
             type: 'button',
             className: 'dsh-spotlight-close-btn',
-            title: 'Close search',
-            'aria-label': 'Close search',
-            onClick: () => setIsOpen(false)
+            title: 'Close',
+            'aria-label': 'Close',
+            onPointerDown: (e) => {
+              e.preventDefault();
+              setIsOpen(false);
+            },
+            onClick: (e) => {
+              e.preventDefault();
+              setIsOpen(false);
+            }
           }, '✕')
         ),
 
@@ -1333,6 +1340,7 @@ window.__ModuleLoader__.load({
         // 3. Intercept sidebar search button and global shortcut
         const isSearchTrigger = (target) => {
           if (!target || !(target instanceof Element)) return false;
+          if (target.closest('.dsh-spotlight-dialog, .dsh-spotlight-overlay')) return false;
           return target.closest(
             'button[aria-label*="Search" i], button[aria-label*="Buscar" i], button[aria-label*="搜索"], [class*="searchButton"], button[aria-keyshortcuts*="K"]'
           );
