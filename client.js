@@ -426,6 +426,11 @@ window.__ModuleLoader__.load({
             lay.selectPanel(null);
           }
           // ponytail: collapse sidebar on mobile if open; upgrade to gesture-synced transitions if requested
+          if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+            if (lay && typeof lay.closeRightbar === 'function') {
+              lay.closeRightbar();
+            }
+          }
           const frame = typeof document !== 'undefined' && document.querySelector('[class*="_frame"], [data-dsh-frame]');
           if (frame && !frame.hasAttribute('data-sidebar-collapsed')) {
             const toggle = document.querySelector('button[data-sidebar-toggle]');
@@ -507,7 +512,13 @@ window.__ModuleLoader__.load({
       return h('div', {
         className: 'dsh-spotlight-overlay',
         onClick: (e) => {
-          if (e.target === e.currentTarget) setIsOpen(false);
+          if (e.target === e.currentTarget) {
+            e.preventDefault();
+            e.stopPropagation();
+            setTimeout(() => {
+              setIsOpen(false);
+            }, 60);
+          }
         }
       }, h('div', {
         className: 'dsh-spotlight-dialog',
@@ -597,12 +608,15 @@ window.__ModuleLoader__.load({
             title: 'Close',
             'aria-label': 'Close',
             onPointerDown: (e) => {
-              e.preventDefault();
-              setIsOpen(false);
+              e.stopPropagation();
             },
             onClick: (e) => {
               e.preventDefault();
-              setIsOpen(false);
+              e.stopPropagation();
+              // Delay unmount to let mobile touch sequence finish, preventing ghost-clicks on underlying header buttons
+              setTimeout(() => {
+                setIsOpen(false);
+              }, 60);
             }
           }, '✕')
         ),
