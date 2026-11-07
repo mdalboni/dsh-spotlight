@@ -1,6 +1,6 @@
 {
   "name": "dsh-spotlight",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Spotlight & IntelliJ-style search dialog for DSH sessions and chats",
   "keywords": [
     "dsh-plugin",

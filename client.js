@@ -146,7 +146,13 @@ window.__ModuleLoader__.load({
           setTimeout(() => {
             if (inputRef.current) {
               inputRef.current.focus();
-              inputRef.current.select();
+              const isTouch = typeof window !== 'undefined' && (
+                (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) ||
+                ('ontouchstart' in window)
+              );
+              if (!isTouch) {
+                inputRef.current.select();
+              }
             }
           }, 50);
         };
@@ -391,13 +397,28 @@ window.__ModuleLoader__.load({
           if (lay && typeof lay.selectPanel === 'function') {
             lay.selectPanel(null);
           }
+          // ponytail: collapse sidebar on mobile if open; upgrade to gesture-synced transitions if requested
+          const frame = typeof document !== 'undefined' && document.querySelector('[class*="_frame"], [data-dsh-frame]');
+          if (frame && !frame.hasAttribute('data-sidebar-collapsed')) {
+            const toggle = document.querySelector('button[data-sidebar-toggle]');
+            if (toggle) {
+              toggle.click();
+            } else if (lay && typeof lay.toggleSidebar === 'function') {
+              lay.toggleSidebar();
+            }
+          }
         } catch (err) {
           console.error('Failed to open session:', err);
         }
       };
 
-      // Row click handler: single-click selects, double-click opens immediately
+      // Row click handler: single-tap opens on mobile, single-click selects on desktop
       const handleRowClick = (idx, item) => {
+        const isMobile = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+        if (isMobile) {
+          openSession(item.sessionId);
+          return;
+        }
         setSelectedIndex(idx);
         const now = Date.now();
         if (lastClickRef.current.id === item.sessionId && (now - lastClickRef.current.time) < 400) {
@@ -541,7 +562,14 @@ window.__ModuleLoader__.load({
               ),
               h('span', null, 'Chat')
             )
-          )
+          ),
+          h('button', {
+            type: 'button',
+            className: 'dsh-spotlight-close-btn',
+            title: 'Close search',
+            'aria-label': 'Close search',
+            onClick: () => setIsOpen(false)
+          }, '✕')
         ),
 
         // Subheader status line
@@ -1126,6 +1154,118 @@ window.__ModuleLoader__.load({
   background: #1d4ed8 !important;
 }
 
+.dsh-spotlight-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.dsh-spotlight-close-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .dsh-spotlight-overlay {
+    padding-top: 0;
+    align-items: stretch;
+    background: rgba(0, 0, 0, 0.85);
+  }
+
+  .dsh-spotlight-dialog {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100%;
+    max-height: 100dvh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .dsh-spotlight-header {
+    padding: 10px 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .dsh-spotlight-search-box {
+    order: 1;
+    flex: 1;
+    min-width: calc(100% - 46px);
+    padding: 8px 12px;
+  }
+
+  .dsh-spotlight-close-btn {
+    order: 2;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 18px;
+  }
+
+  .dsh-spotlight-filters {
+    order: 3;
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    margin-top: 2px;
+  }
+
+  .dsh-spotlight-filter-btn {
+    flex: 1;
+    justify-content: center;
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .dsh-spotlight-input {
+    font-size: 16px !important;
+  }
+
+  .dsh-spotlight-list {
+    flex: 1;
+    min-height: 0;
+    max-height: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .dsh-spotlight-item {
+    padding: 12px 14px;
+    min-height: 48px;
+  }
+
+  .dsh-spotlight-item-location {
+    max-width: 90px;
+    font-size: 11px;
+  }
+
+  .dsh-spotlight-row-open-btn {
+    opacity: 1;
+    padding: 4px 8px;
+    font-size: 13px;
+  }
+
+  .dsh-spotlight-preview-pane {
+    display: none !important;
+  }
+
+  .dsh-spotlight-footer {
+    display: none !important;
+  }
+}
+
 /* Intercepting sidebar search: keep search button visible, suppress inline input expand */
 [class*="searchSlotExpanded"] {
   max-width: 28px !important;
@@ -1161,7 +1301,7 @@ window.__ModuleLoader__.load({
         const isSearchTrigger = (target) => {
           if (!target || !(target instanceof Element)) return false;
           return target.closest(
-            'button[aria-label*="Search sessions"], button[aria-label*="搜索会话"], button[aria-label="Search"], [class*="searchButton"]'
+            'button[aria-label*="Search" i], button[aria-label*="Buscar" i], button[aria-label*="搜索"], [class*="searchButton"], button[aria-keyshortcuts*="K"]'
           );
         };
 

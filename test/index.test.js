@@ -40,3 +40,13 @@ test('dsh-spotlight client module registers in shell.overlay, intercepts search,
   assert.match(clientCode, /sessionMessagesCache/);
   assert.match(clientCode, /dsh-spotlight-open-btn/);
 });
+
+test('dsh-spotlight client module adapts for mobile viewports and touch interaction', () => {
+  const clientCode = readFileSync(join(__dirname, '..', 'client.js'), 'utf8');
+  assert.match(clientCode, /@media\s*\(max-width:\s*768px\)/);
+  assert.match(clientCode, /dsh-spotlight-close-btn/);
+  assert.match(clientCode, /Buscar/);
+  assert.match(clientCode, /toggleSidebar/);
+  assert.match(clientCode, /data-sidebar-collapsed/);
+  assert.match(clientCode, /16px\s*!important/);
+});
