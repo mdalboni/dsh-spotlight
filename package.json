@@ -1,0 +1,63 @@
+{
+  "name": "dsh-spotlight",
+  "version": "1.0.1",
+  "description": "Spotlight & IntelliJ-style search dialog for DSH sessions and chats",
+  "keywords": [
+    "dsh-plugin",
+    "dsh",
+    "deepseek-harness",
+    "spotlight-search",
+    "session-search",
+    "chat-search"
+  ],
+  "author": "Maxwell Dalboni <maxwell@dalboni.land>",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdalboni/dsh-spotlight.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mdalboni/dsh-spotlight/issues"
+  },
+  "homepage": "https://github.com/mdalboni/dsh-spotlight#readme",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./icon": "./icon.svg",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "icon.svg",
+    "locale/*.json",
+    "README.md",
+    "README.pt-BR.md",
+    "README.zh.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "engines": {
+      "dsh": ">=0.2.1-rc.3"
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh": ">=0.2.1-rc.3"
+  },
+  "scripts": {
+    "test": "node --test test/index.test.js"
+  }
+}

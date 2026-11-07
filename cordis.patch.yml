@@ -1,0 +1,8 @@
+- id: session-query-sqlite
+  config:
+    path: ':memory:'
+    openAt: first-search
+
+- insert:
+    - id: dsh-spotlight
+      name: dsh-spotlight
