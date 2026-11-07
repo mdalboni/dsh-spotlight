@@ -21,6 +21,7 @@ Plugin para o DeepSeek Harness (DSH) que substitui a busca da barra lateral por 
   - Botão de atalho rápido (`↗`) em cada item da lista.
   - Tecla `Esc` para fechar o diálogo.
 - **Busca em Tempo Real e FTS SQLite:** Localiza mensagens da sessão atual em tempo real no cache local e utiliza o motor SQLite FTS para o histórico persistido.
+- **Totalmente Adaptado para Mobile:** Interface responsiva em tela cheia no mobile, toque único para abrir a conversa, botão `✕` dedicado, compatibilidade com teclado virtual e auto-recolhimento da barra lateral.
 - **Nativo ao Tema:** Respeita os tokens de estilo do DSH (`--dsw-alias-*`), adaptando-se a temas claros e escuros.
 
 ---

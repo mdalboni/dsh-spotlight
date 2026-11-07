@@ -21,6 +21,7 @@ A DeepSeek Harness (DSH) plugin that replaces the sidebar search with an Apple S
   - Quick open button (`↗`) on each result item.
   - `Esc` to close.
 - **Immediate Live Search & SQLite FTS:** Searches active live session inboxes in real-time, backed by SQLite FTS for persistent conversation history.
+- **Fully Mobile-Optimized:** Responsive full-screen mobile view, single-tap session navigation, dedicated `✕` close button, virtual keyboard compatibility, and automatic sidebar drawer retraction.
 - **Theme-Native:** Uses DSH `--dsw-alias-*` theme tokens to match light and dark modes seamlessly.
 
 ---
